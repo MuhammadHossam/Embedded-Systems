@@ -5,11 +5,19 @@
  *      Author: Muhammad Hossam
  */
 
+
 #ifndef GPIO_H_
 #define GPIO_H_
 #include "DATA_Types.h"
 #include "ATMEGA32_registers.h"
 #include "std_macros.h"
+#include "Delay.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+extern volatile unsigned char* GPIO_ports[];
+extern volatile unsigned char* GPIO_dirs[];
+extern volatile unsigned char* GPIO_pins[];
 
 #define u8_Direction_input 0x00
 #define u8_Direction_output 0xFF
