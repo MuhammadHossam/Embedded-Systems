@@ -8,19 +8,17 @@
 #ifndef DRIVERS_LCD_LCD_H_
 #define DRIVERS_LCD_LCD_H_
 
-#include "DATA_Types.h"
-#include "ATMEGA32_registers.h"
-#include "std_macros.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include "GPIO.h"
-#include "Delay.h"
 
-#define LCD_port *(GPIOA_PORT)
-#define DataDir_LCD_port *(GPIOA_DDR)
+#include "GPIO.h"
+
+
+//#define LCD_port *(GPIOA_PORT)
+#define LCD_PORT 'A'
+//#define DataDir_LCD_port *(GPIOA_DDR)
 #define DATA_shift 0    //0:4bit data mode | 4:4bit data mode
-#define LCD_control *(GPIOB_PORT)
-#define DataDir_LCD_control *(GPIOB_DDR)
+#define LCD_control_PORT 'B'
+//#define LCD_control *(GPIOB_PORT)
+//#define DataDir_LCD_control *(GPIOB_DDR)
 #define EN_switch 3
 #define ReadWrite 2
 #define RS_switch 1
@@ -63,33 +61,33 @@
 #define LCD_ENTRY_MODE								(0x06)
 
 /*comment! : Check lcd is busy */
-u8 LCD_check_lcd_isbusy(void);
+extern u8 LCD_check_lcd_isbusy(void);
 
 /*comment! : Set the Enable pin from High to low pulse in minimum 230 ns to latch the data */
-u8 LCD_lcd_kick (void);
+extern u8 LCD_lcd_kick (void);
 
 /*comment! : Send a Command to LCD controller */
-u8 LCD_Send_A_Command(u8 command);
+extern u8 LCD_Send_A_Command(u8 command);
 
 /*comment! : Send a Character to LCD controller */
-u8 LCD_Send_A_Character(u8 character);
+extern u8 LCD_Send_A_Character(u8 character);
 
 /*comment! : Send a string to LCD controller */
-u8 LCD_Send_A_String(u8 *string);
+extern u8 LCD_Send_A_String(u8 *string);
 
 /*comment! : LCD Initialization */
-void LCD_lcd_init(void);
+extern void LCD_lcd_init(void);
 
 /*comment! : Clear LCD */
-u8 LCD_clear_screen ();
+extern u8 LCD_clear_screen ();
 
 /*comment! : Goto a certain position in the LCD */
-u8 LCD_GotoXY(u8 line, u8 position );
+extern u8 LCD_GotoXY(u8 line, u8 position );
 
 /*comment! : Display a number to LCD */
-u8 LCD_display_number (u16 Number );
+extern u8 LCD_display_number (u16 Number );
 
 /*comment! : Display a real number to LCD */
-u8 LCD_display_real_number (f64  Number );
+extern u8 LCD_display_real_number (f64  Number );
 
 #endif /* DRIVERS_LCD_LCD_H_ */

@@ -12,19 +12,23 @@ void LCD_lcd_init(void)
 {
 
 	DELAY_MS(20);
-	DataDir_LCD_control |= (1<<EN_switch | 1<<ReadWrite | 1<<RS_switch) ; // Set direction output for Control pins
-	LCD_control &= ~(1<<EN_switch | 1<<ReadWrite | 1<<RS_switch) ;  // Clear control pins as initialization
+	GPIO_u8_WritePinDir(EN_switch,1,LCD_control_PORT);
+	GPIO_u8_WritePinDir(ReadWrite,1,LCD_control_PORT);
+	GPIO_u8_WritePinDir(RS_switch,1,LCD_control_PORT);
+	GPIO_u8_WritePinVal(EN_switch,0,LCD_control_PORT);
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);
+	GPIO_u8_WritePinVal(RS_switch,0,LCD_control_PORT);
 
 
 #ifdef EIGHT_BIT_MODE
-	DataDir_LCD_port = 0xff ;   // Set data Direction
+	GPIO_u8_WritePortDir(0xff,LCD_PORT);  // Set data Direction
 	DELAY_MS(15);
 	LCD_clear_screen ();
 	LCD_Send_A_Command(LCD_FUNCTION_8BIT_2LINES);
 
 #endif
 #ifdef FOUR_BIT_MODE
-	DataDir_LCD_port = 0xf0 ;   // Set data Direction
+	GPIO_u8_WritePortDir(0xf0,LCD_PORT);   // Set data Direction
 	DELAY_MS(15);
 	LCD_clear_screen ();
 	LCD_Send_A_Command(0x02);
@@ -70,13 +74,12 @@ u8 LCD_GotoXY(u8 line, u8 position )
 
 u8 LCD_check_lcd_isbusy()
 {
-	static u8 x = 0;
-	DataDir_LCD_port &= ~(0xff<<DATA_shift) ;
-	LCD_control |= (1<<ReadWrite); // read
-	LCD_control &= ~ (1<<RS_switch);
+	GPIO_u8_WritePortDir(~(0xff<<DATA_shift),LCD_PORT);   // Set data Direction
+	GPIO_u8_WritePinVal(ReadWrite,1,LCD_control_PORT);    // read
+	GPIO_u8_WritePinVal(RS_switch,0,LCD_control_PORT);
 
-	DataDir_LCD_port = 0xFF; //0xFF means 0b11111111
-	LCD_control &= ~ (1<<ReadWrite); //write
+	GPIO_u8_WritePortDir(0xff<<DATA_shift,LCD_PORT);   // Set data Direction
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);    // Write
 
 	return No_error;
 }
@@ -87,11 +90,13 @@ u8 LCD_check_lcd_isbusy()
 
 u8 LCD_lcd_kick ()
 {
-	LCD_control |= 1<<EN_switch;
+	GPIO_u8_WritePinVal(EN_switch,1,LCD_control_PORT);
+	//LCD_control |= 1<<EN_switch;
 	asm volatile ("nop");
 	asm volatile ("nop");
 	DELAY_MS (50) ;
-	LCD_control &= ~ (1<<EN_switch);
+	GPIO_u8_WritePinVal(EN_switch,0,LCD_control_PORT);
+	//LCD_control &= ~ (1<<EN_switch);
 	return No_error;
 }
 
@@ -100,22 +105,26 @@ u8 LCD_lcd_kick ()
 
 u8 LCD_Send_A_Command(u8 command)
 {
+	u8 d;
 #ifdef EIGHT_BIT_MODE
 	LCD_check_lcd_isbusy();
-
-	LCD_port = command  ;
-	LCD_control &= ~ ((1<<ReadWrite)|(1<<RS_switch));
+	GPIO_u8_WritePortVal(command,LCD_PORT);
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);
+	GPIO_u8_WritePinVal(RS_switch,0,LCD_control_PORT);
 	LCD_lcd_kick ();
 	//LCD_port = 0;
 #endif
 #ifdef FOUR_BIT_MODE
 	LCD_check_lcd_isbusy();
-
-	LCD_port = (LCD_port & 0x0F) | (command & 0xF0);
-	LCD_control &= ~ ((1<<ReadWrite)|(1<<RS_switch));
+	GPIO_u8_ReadPortVal(&d,LCD_PORT);
+	GPIO_u8_WritePortVal((d & 0x0F) | (command & 0xF0),LCD_PORT);
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);
+	GPIO_u8_WritePinVal(RS_switch,0,LCD_control_PORT);
 	LCD_lcd_kick ();
-	LCD_port = (LCD_port & 0x0F) | (command << 4);
-	LCD_control &= ~ ((1<<ReadWrite)|(1<<RS_switch));
+	GPIO_u8_ReadPortVal(&d,LCD_PORT);
+	GPIO_u8_WritePortVal((d & 0x0F) | (command << 4),LCD_PORT);
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);
+	GPIO_u8_WritePinVal(RS_switch,0,LCD_control_PORT);
 	LCD_lcd_kick ();
 #endif
 
@@ -127,27 +136,25 @@ u8 LCD_Send_A_Command(u8 command)
 
 u8 LCD_Send_A_Character(u8 character)
 {
-
+	u8 d;
 #ifdef EIGHT_BIT_MODE
 	LCD_check_lcd_isbusy();
-
-	LCD_control |= 1<<RS_switch; //turn RS ON for Data mode.
-	LCD_control &= ~ (1<<ReadWrite);//turn RW off so you can write.
-	LCD_port = ( ( (character  ) << DATA_shift)   )  ;
-
+	GPIO_u8_WritePortVal( ((character  ) << DATA_shift),LCD_PORT);
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);  //turn RW off so you can write.
+	GPIO_u8_WritePinVal(RS_switch,1,LCD_control_PORT);  //turn RS ON for Data mode.
 	LCD_lcd_kick ();
 	//LCD_port = 0;
 #endif
 
 #ifdef FOUR_BIT_MODE
 	LCD_check_lcd_isbusy();
-	LCD_control |= 1<<RS_switch; //turn RS ON for Data mode.
-	LCD_control &= ~ (1<<ReadWrite);//turn RW off so you can write.
-	LCD_port = (LCD_port & 0x0F) | (character & 0xF0);
-
+	GPIO_u8_WritePinVal(ReadWrite,0,LCD_control_PORT);  //turn RW off so you can write.
+	GPIO_u8_WritePinVal(RS_switch,1,LCD_control_PORT);  //turn RS ON for Data mode.
+	GPIO_u8_ReadPortVal(&d,LCD_PORT);
+	GPIO_u8_WritePortVal((d & 0x0F) | (character & 0xF0),LCD_PORT);
 	LCD_lcd_kick ();
-	LCD_port = (LCD_port & 0x0F) | (character << 4);
-
+	GPIO_u8_ReadPortVal(&d,LCD_PORT);
+	GPIO_u8_WritePortVal((d & 0x0F) | (character << 4),LCD_PORT);
 	LCD_lcd_kick ();
 
 #endif
