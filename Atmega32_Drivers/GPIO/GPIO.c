@@ -8,9 +8,9 @@
 #include "GPIO.h"
 
 
-volatile unsigned char* GPIO_ports[] = {GPIOA_PORT,GPIOB_PORT,GPIOC_PORT,GPIOD_PORT};
-volatile unsigned char* GPIO_dirs[] =  {GPIOA_DDR,GPIOB_DDR,GPIOC_DDR,GPIOD_DDR};
-volatile unsigned char* GPIO_pins[] =  {GPIOA_PIN,GPIOB_PIN,GPIOC_PIN,GPIOD_PIN};
+ volatile unsigned char* GPIO_ports[] = {GPIOA_PORT,GPIOB_PORT,GPIOC_PORT,GPIOD_PORT};
+ volatile unsigned char* GPIO_dirs[]  =  {GPIOA_DDR,GPIOB_DDR,GPIOC_DDR,GPIOD_DDR};
+ volatile unsigned char* GPIO_pins[]  =  {GPIOA_PIN,GPIOB_PIN,GPIOC_PIN,GPIOD_PIN};
 
 u8 get_port_index (u8 port_name)
 {
@@ -103,6 +103,33 @@ u8 GPIO_u8_WritePinVal(u8 PinIdx,u8 PinVal, u8 Port_Name)
 			API_Status = No_error;
 			break;
 		case 0:
+			CLRBIT(*GPIO_ports[get_port_index(Port_Name)],PinIdx);
+			API_Status = No_error;
+			break;
+		}
+	}
+
+	return API_Status;
+}
+/*Comment! : Toggle Pin Val*/
+u8 GPIO_u8_TogglePinVal(u8 PinIdx, u8 Port_Name)
+{
+	u8 API_Status;
+	u8 PinVal = 0;
+	if(PinIdx > no_of_pins_on_port - 1)
+	{
+		API_Status = error_happen;
+	}
+	else
+	{
+		GPIO_u8_ReadPinVal(PinIdx,&PinVal,Port_Name);
+		switch(PinVal)
+		{
+		case 0:
+			SETBIT(*GPIO_ports[get_port_index(Port_Name)],PinIdx);
+			API_Status = No_error;
+			break;
+		case 1:
 			CLRBIT(*GPIO_ports[get_port_index(Port_Name)],PinIdx);
 			API_Status = No_error;
 			break;

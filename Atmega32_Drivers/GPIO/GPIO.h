@@ -44,6 +44,9 @@ extern u8 GPIO_u8_ReadPinVal_LONG_PRESS(u8 PinIdx,u8* PtrToVal,u8 Port_Name);
 /*Comment!: Write Pin Value */
 extern u8 GPIO_u8_WritePinVal(u8 PinIdx,u8 PinVal, u8 Port_Name);
 
+/*Comment! : Toggle Pin Val*/
+extern u8 GPIO_u8_TogglePinVal(u8 PinIdx, u8 Port_Name);
+
 //Direction
 /*Comment!: Write Pin Direction */
 extern u8 GPIO_u8_WritePinDir(u8 PinIdx,u8 PinDir, u8 Port_Name);

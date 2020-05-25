@@ -174,7 +174,7 @@ u8 LCD_Send_A_String(u8 *StringOfCharacters)
 	{
 		count++;
 		LCD_Send_A_Character(*StringOfCharacters++);
-		if (count == 16  ) // go to the second line
+		if (count == 16) // go to the second line
 		{
 			LCD_GotoXY(1,0); //line 1 position zero
 		}
@@ -194,11 +194,11 @@ u8 LCD_Send_A_String(u8 *StringOfCharacters)
 u8 LCD_display_number (u16 Number )
 {
 
-	u8 str[7];
+	char str[7];
 
-	sprintf((char*)str,"%d",Number);	// Adjust the formatting to your liking.
+	sprintf(str,"%d",Number);	// Adjust the formatting to your liking.
 
-	LCD_Send_A_String (str) ;
+	LCD_Send_A_String ((u8*)str) ;
 
 	return No_error;
 }

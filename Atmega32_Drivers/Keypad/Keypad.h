@@ -9,11 +9,9 @@
 #define KEYPAD_H_
 
 
-#include "DATA_Types.h"
-#include "ATMEGA32_registers.h"
-#include "std_macros.h"
+
 #include "GPIO.h"
-#include "Delay.h"
+
 
 
 //Keypad Information
@@ -34,9 +32,9 @@
 //Keypad functions and global variables
 
 
-void  Keypad_init();
-u8 Keypad_getkey();
-s32 myAtoi(u8* str);
+extern void  Keypad_init();
+extern u8 Keypad_getkey();
+extern s32 myAtoi(u8* str);
 
 
 

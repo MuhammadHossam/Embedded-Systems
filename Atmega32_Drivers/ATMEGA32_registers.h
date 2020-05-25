@@ -27,7 +27,7 @@
 #define OCDR_R *((volatile unsigned char* const)0x51)
 #define SFIOR_R *((volatile unsigned char* const)0x50)
 #define TCCR1A_R *((volatile unsigned char* const)0x4F)
-#define TCCR1B_R *((volatile unsigned char* const)0x54E)
+#define TCCR1B_R *((volatile unsigned char* const)0x4E)
 #define TCNT1H_R *((volatile unsigned char* const)0x4D)
 #define TCNT1L_R *((volatile unsigned char* const)0x4C)
 #define OCR1AH_R *((volatile unsigned char* const)0x4B)

@@ -2,7 +2,7 @@
  * SevenSeg.c
  *
  *  Created on: Apr 25, 2020
- *      Author: Muhammad Hossam ELDen
+ *      Author: Muhammad Hossam
  */
 
 #include "SevenSeg.h"

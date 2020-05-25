@@ -2,7 +2,7 @@
  * std_macros.h
  *
  * Created: 4/25/2017 4:00:26 PM
- *  Author: safifi
+ *  Author: Muhammad Hossam
  */ 
 
 

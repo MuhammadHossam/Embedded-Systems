@@ -6,6 +6,7 @@
  */
 
 #include "keypad.h"
+
 int Key_padRow[] = {R0, R1, R2, R3}; //rows of the keypad
 int Key_padCol[] = {C0, C1, C2, C3}; //columns
 void  Keypad_init()
@@ -24,6 +25,8 @@ void  Keypad_init()
 	 *	Set all input and output pins HIGH which means that input pins are pull up resistors
 	 */
 	keypadPORT = 0xFF ;
+
+
 
 }
 

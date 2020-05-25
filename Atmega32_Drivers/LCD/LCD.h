@@ -19,9 +19,9 @@
 #define LCD_control_PORT 'B'
 //#define LCD_control *(GPIOB_PORT)
 //#define DataDir_LCD_control *(GPIOB_DDR)
-#define EN_switch 3
+#define EN_switch 4
 #define ReadWrite 2
-#define RS_switch 1
+#define RS_switch 0
 #define LCD_DATA_PORT 'A'
 
 //#define	EIGHT_BIT_MODE
